@@ -1,12 +1,12 @@
 /*
  * @Date: 2024-04-25 10:07:47
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-25 17:09:12
+ * @LastEditTime: 2024-04-25 18:23:49
  * @FilePath: /yh_serve/src/app.module.ts
  */
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { getEnvConfig } from '../config/env';
+import { getEnvConfig } from './config/env';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './moudles/user/user.module';
 import { AuthModule } from './moudles/auth/auth.module';
