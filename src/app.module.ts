@@ -12,6 +12,8 @@ import { UserModule } from './moudles/user/user.module';
 import { AuthModule } from './moudles/auth/auth.module';
 import { AuthGuard } from './common/auth/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { RoleModule } from './moudles/role/role.module';
+import { MenuModule } from './moudles/menu/menu.module';
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { APP_GUARD } from '@nestjs/core';
     }),
     UserModule,
     AuthModule,
+    RoleModule,
+    MenuModule,
   ],
   controllers: [],
   providers: [

@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-25 15:10:44
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-25 17:00:39
+ * @LastEditTime: 2024-04-25 20:08:43
  * @FilePath: /yh_serve/src/moudles/auth/local.strategy.ts
  */
 import { PassportStrategy } from '@nestjs/passport';
@@ -20,6 +20,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
   // 验证用户登录
   async validate(username: string, password: string): Promise<any> {
+    console.log(username, password);
     const user = await this.authService.validateUser(username);
     if (!user) {
       throw new HttpException('用户不存在', HttpStatus.OK);

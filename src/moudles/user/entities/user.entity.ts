@@ -1,9 +1,10 @@
 /*
  * @Date: 2024-04-25 11:53:09
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-25 14:28:39
+ * @LastEditTime: 2024-04-26 11:42:16
  * @FilePath: /yh_serve/src/moudles/user/entities/user.entity.ts
  */
+import { Role } from '@/moudles/role/entities/role.entity';
 import { SEX } from 'src/utils/enum';
 import {
   Column,
@@ -11,6 +12,8 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 @Entity('user')
@@ -79,4 +82,8 @@ export class User {
   //用户别名
   @Column({ comment: '用户别名', type: 'varchar', length: 50, default: null })
   nickname: string;
+
+  @ManyToMany(() => Role, (role) => role.users)
+  @JoinTable({ name: 'user_role' })
+  roles: Role[];
 }

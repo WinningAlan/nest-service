@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-25 17:07:30
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-25 18:13:07
+ * @LastEditTime: 2024-04-25 20:17:16
  * @FilePath: /yh_serve/src/common/auth/auth.guard.ts
  */
 import { AuthService } from '@/moudles/auth/auth.service';
@@ -29,6 +29,7 @@ export class AuthGuard implements CanActivate {
     ]);
 
     // 如果是公共接口，则直接返回true
+    console.log(isPublic);
     if (isPublic) {
       return true;
     } else {
@@ -52,5 +53,6 @@ export class AuthGuard implements CanActivate {
         }
       }
     }
+    return true;
   }
 }

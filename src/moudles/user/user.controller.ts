@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-25 11:53:09
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-25 18:16:13
+ * @LastEditTime: 2024-04-26 11:13:13
  * @FilePath: /yh_serve/src/moudles/user/user.controller.ts
  */
 import {
@@ -18,6 +18,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { IsPublic } from '@/utils/setMetaData';
+import { UserRoleDto } from './dto/user-role.dto';
 
 @Controller('user')
 @ApiTags('用户管理')
@@ -58,5 +59,13 @@ export class UserController {
   @ApiParam({ name: 'id', description: '用户ID', required: true })
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
+  }
+
+  @Patch('/userLinkRole/:id')
+  @ApiOperation({ summary: '用户关联角色', description: '用户关联角色' })
+  @ApiParam({ name: 'id', description: '用户ID', required: true })
+  @ApiBody({ type: UserRoleDto, description: '用户关联角色DTO' })
+  userLinkRole(@Param('id') id: string, @Body() userRoleDto: UserRoleDto) {
+    return this.userService.userLinkRole(id, userRoleDto);
   }
 }
