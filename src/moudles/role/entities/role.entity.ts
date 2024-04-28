@@ -1,14 +1,16 @@
 /*
  * @Date: 2024-04-25 20:44:20
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-26 10:56:14
+ * @LastEditTime: 2024-04-26 13:38:20
  * @FilePath: /yh_serve/src/moudles/role/entities/role.entity.ts
  */
+import { Menu } from '@/moudles/menu/entities/menu.entity';
 import { User } from '@/moudles/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -68,4 +70,8 @@ export class Role {
 
   @ManyToMany(() => User, (user) => user.roles)
   users: User[];
+
+  @ManyToMany(() => Menu, (menu) => menu.roles)
+  @JoinTable({ name: 'role_menu' })
+  menus: Menu[];
 }

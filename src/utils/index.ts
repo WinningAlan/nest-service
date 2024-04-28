@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-25 10:33:11
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-25 14:45:57
+ * @LastEditTime: 2024-04-26 21:49:44
  * @FilePath: /yh_serve/src/utils/index.ts
  */
 /*
@@ -50,3 +50,24 @@ export const createPassword = (password: string) => {
 export const checkPassword = (password: string, passwordHash: string) => {
   return createPassword(password) === passwordHash;
 };
+
+/*
+ * @description:构建树形结构
+ * @param {*} data 数据
+ * @return {*}
+ * @author: shubings
+ */
+export function buildTree(arr, parentId = null) {
+  const tree = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].parentId === parentId) {
+      const node = { ...arr[i] };
+      const children = buildTree(arr, arr[i].id);
+      if (children.length > 0) {
+        node.children = children;
+      }
+      tree.push(node);
+    }
+  }
+  return tree;
+}
