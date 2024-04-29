@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-26 09:41:50
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-28 09:34:20
+ * @LastEditTime: 2024-04-28 20:36:33
  * @FilePath: /yh_serve/src/moudles/menu/menu.service.ts
  */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -72,8 +72,8 @@ export class MenuService {
     }
     await this.menuRepository.update(id, {
       ...updateMenuDto,
-      updateUserId: user.id,
-      updateUserName: user.username,
+      updateUserId: user?.id,
+      updateUserName: user?.username,
     });
     return responseResult(null, '菜单更新成功');
   }
@@ -136,6 +136,15 @@ export class MenuService {
     return await this.menuRepository.find({
       where: {
         id: In(ids),
+        isDelete: false,
+      },
+    });
+  }
+
+  async findParentIds(parendIds: string[]): Promise<Menu[]> {
+    return await this.menuRepository.find({
+      where: {
+        parentId: In(parendIds),
         isDelete: false,
       },
     });

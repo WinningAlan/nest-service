@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-25 11:53:09
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-26 11:13:13
+ * @LastEditTime: 2024-04-28 15:15:40
  * @FilePath: /yh_serve/src/moudles/user/user.controller.ts
  */
 import {
@@ -12,6 +12,7 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -67,5 +68,11 @@ export class UserController {
   @ApiBody({ type: UserRoleDto, description: '用户关联角色DTO' })
   userLinkRole(@Param('id') id: string, @Body() userRoleDto: UserRoleDto) {
     return this.userService.userLinkRole(id, userRoleDto);
+  }
+
+  @Get('/getUserInfo')
+  @ApiOperation({ summary: '获取用户信息', description: '获取用户信息' })
+  getUserInfo(@Req() req) {
+    return this.userService.getUserInfo(req.user.id);
   }
 }

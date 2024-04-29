@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-25 20:44:20
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-26 11:10:24
+ * @LastEditTime: 2024-04-28 10:33:20
  * @FilePath: /yh_serve/src/moudles/role/role.service.ts
  */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -11,12 +11,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
 import { responseResult } from '@/utils';
+import { RoleMenuDto } from './dto/role-menu.dto';
+import { MenuService } from '../menu/menu.service';
 
 @Injectable()
 export class RoleService {
   constructor(
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
+    private readonly menuService: MenuService,
   ) {}
   /*
    * @description: 创建角色
@@ -134,5 +137,41 @@ export class RoleService {
     return this.roleRepository.find({
       where: { id: In(ids), isDelete: false },
     });
+  }
+
+  async updatePermission(id: string, roleMenuDto: RoleMenuDto, user) {
+    const role = await this.findById(id);
+    if (!role) {
+      throw new HttpException('角色不存在', HttpStatus.OK);
+    }
+    console.log(role, id, roleMenuDto);
+
+    const menus = await this.menuService.findByIds(roleMenuDto.ids);
+
+    role.menus = menus;
+    role.updateUserId = user.id;
+    role.updateUserName = user.username;
+
+    await this.roleRepository.save(role);
+    return responseResult(null, '角色权限更新成功', 200);
+  }
+
+  /*
+   * @description: 查询角色
+   * @param {string} id 角色id
+   * @return {*}
+   */
+  async getPermission(id: string) {
+    const role = await this.roleRepository.findOne({
+      where: { id, isDelete: false },
+      select: {
+        id: true,
+      },
+      relations: {
+        menus: true,
+      },
+    });
+    const arr = role.menus.map((item) => item.id);
+    return responseResult(arr, '查询角色成功', 200);
   }
 }

@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-26 09:41:50
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-28 09:28:08
+ * @LastEditTime: 2024-04-28 09:55:10
  * @FilePath: /yh_serve/src/moudles/menu/menu.controller.ts
  */
 import {
@@ -70,6 +70,7 @@ export class MenuController {
     @Body() updateMenuDto: UpdateMenuDto,
     @Req() req,
   ) {
+    console.log(id, updateMenuDto, req.user);
     return this.menuService.update(id, updateMenuDto, req.user);
   }
 

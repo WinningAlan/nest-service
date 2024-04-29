@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-25 20:44:20
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-26 10:43:45
+ * @LastEditTime: 2024-04-28 10:24:44
  * @FilePath: /yh_serve/src/moudles/role/role.controller.ts
  */
 import {
@@ -18,6 +18,7 @@ import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { RoleMenuDto } from './dto/role-menu.dto';
 
 @Controller('role')
 @ApiTags('角色管理')
@@ -79,5 +80,27 @@ export class RoleController {
   })
   remove(@Param('id') id: string, @Req() req) {
     return this.roleService.remove(id, req.user);
+  }
+
+  @Patch('/updatePermission/:id')
+  @ApiOperation({
+    summary: '更新角色权限',
+    description: '更新角色权限',
+  })
+  updatePermission(
+    @Param('id') id: string,
+    @Body() roleMenuDto: RoleMenuDto,
+    @Req() req,
+  ) {
+    return this.roleService.updatePermission(id, roleMenuDto, req.user);
+  }
+
+  @Get('getPermission/:id')
+  @ApiOperation({
+    summary: '获取角色权限',
+    description: '获取角色权限',
+  })
+  getPermission(@Param('id') id: string) {
+    return this.roleService.getPermission(id);
   }
 }

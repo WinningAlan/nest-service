@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-25 11:53:09
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-26 11:44:34
+ * @LastEditTime: 2024-04-29 09:13:22
  * @FilePath: /yh_serve/src/moudles/user/user.service.ts
  */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -10,10 +10,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { responseResult, createPassword } from '../../utils';
+import { responseResult, createPassword, buildTree } from '../../utils';
 import { Response } from '../../utils/types';
 import { RoleService } from '../role/role.service';
 import { UserRoleDto } from './dto/user-role.dto';
+import { MenuService } from '../menu/menu.service';
 
 @Injectable()
 export class UserService {
@@ -21,6 +22,7 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly roleService: RoleService,
+    private readonly menuService: MenuService,
   ) {}
   /*
    * @description: 创建用户
@@ -110,7 +112,7 @@ export class UserService {
     updateUserDto: UpdateUserDto,
   ): Promise<Response<null>> {
     const user = await this.findOne(id);
-    if (!user) {
+    if (!user.data) {
       throw new HttpException('用户不存在', HttpStatus.OK);
     }
     try {
@@ -128,7 +130,7 @@ export class UserService {
    */
   async remove(id: string): Promise<Response<null>> {
     const user = await this.findOne(id);
-    if (!user) {
+    if (!user.data) {
       throw new HttpException('用户不存在', HttpStatus.OK);
     }
     try {
@@ -158,5 +160,46 @@ export class UserService {
       return responseResult(null, '更新失败', -1);
     }
     return responseResult(null, '更新成功', 200);
+  }
+
+  async getUserInfo(id: string) {
+    console.log(id, 'getUserInfo');
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .andWhere('user.isDelete = false')
+      .leftJoinAndSelect('user.roles', 'role')
+      .andWhere('role.isDelete = :isDelete', { isDelete: false })
+      .leftJoinAndSelect('role.menus', 'menu')
+      .andWhere('menu.isDelete = :isDelete', { isDelete: false })
+      .getOne();
+
+    const roles = user.roles;
+    console.log(user);
+    const menuList = [];
+    const menuParentIds = [];
+    roles.forEach((role) => {
+      role.menus.forEach((menu) => {
+        menuList.push(menu);
+        menuParentIds.push(menu.parentId);
+      });
+      delete role.menus;
+    });
+
+    const parentMenus = await this.menuService.findParentIds(menuParentIds);
+    let routers = [...parentMenus, ...menuList];
+    const deWeightThree = (arr) => {
+      const map = new Map();
+      for (const item of arr) {
+        if (!map.has(item.id)) {
+          map.set(item.id, item);
+        }
+      }
+      return [...map.values()];
+    };
+    routers = buildTree(deWeightThree(routers));
+
+    console.log(routers, 'routers');
+    return responseResult({ ...user, routers }, '获取用户信息成功', 200);
   }
 }

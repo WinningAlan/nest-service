@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-25 14:38:53
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-04-28 09:25:45
+ * @LastEditTime: 2024-04-28 09:56:29
  * @FilePath: /yh_serve/src/moudles/auth/auth.service.ts
  */
 import { Injectable } from '@nestjs/common';
@@ -79,6 +79,6 @@ export class AuthService {
     const payload = await this.jwtService.verify(token, {
       secret: this.configService.get('JWT_SECRET'),
     });
-    return await this.findByUserId(payload.username);
+    return await this.findByUserId(payload.id);
   }
 }
